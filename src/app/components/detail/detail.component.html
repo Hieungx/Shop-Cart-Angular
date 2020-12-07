@@ -1,0 +1,27 @@
+<h4 align="center" class="display-4"><b>{{title}}</b></h4>
+<div class="card text-center" style="width: 320px;margin-left: 35%; margin-right: 35%;">
+    <img src="{{product?.productIcon}}" height="400px" />
+    <form (ngSubmit)="onSubmit()">
+        <div class="card-body ">
+            <div class="card-tittle">
+                {{product?.productName}}
+            </div>
+            <div class="text-left ">
+                <p><strong>Description: </strong>{{product?.productDecription}}</p>
+                <p><strong>Price: </strong>30$</p>
+                <p><strong>Stock: </strong>{{product?.productStock}}</p>
+                <div class="form-inline">
+                    <label class="mr-1"><strong>Quantity</strong></label>
+                    <input class="custom-control" type="number" min="1" [max]="product?.productStock" name="count" [(ngModel)]="count" (change)="validateCount()">
+                    <!--[max] Gan gia tri cho max-->
+                    <!--[(ngModel)] lắng nghe sự thay đổi của biến count : 2waybinding-->
+                    <!--(change)binding event-->
+                </div>
+                <p><strong>Subtotal: </strong>{{count * product?.productPrice | currency}}</p>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg " *ngIf="product?.productStatus==0 ; else offBlock">Add to Cart</button>
+            <!-- <a class=" btn btn-primary btn-lg " *ngIf="product?.productStatus==0 ; else offBlock ">Add to Cart</a> -->
+            <ng-template #offBlock><button class="btn btn-secondary btn-lg disable ">Unvliable</button></ng-template>
+        </div>
+    </form>
+</div>
