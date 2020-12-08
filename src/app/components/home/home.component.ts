@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,OnDestroy  } from '@angular/core';
 import { ProductService } from 'src/app/service/product.service';
+import { ActivatedRoute } from '@angular/router';
+import { url } from 'inspector';
 
 @Component({
   selector: 'app-home',
@@ -10,51 +12,71 @@ export class HomeComponent implements OnInit {
 
   title = 'My Book Shop';
 
-  products: any[] =[
-    {
-      productId: 'B0001',
-      productName: 'Core Java',
-      productPrice: 30.00,
-      productStock: 96,
-      productDescription: 'Book for learning java',
-      productIcon: 'https://images-na.ssl-images-amazon.com/images/I/71w0GK2e7eL.jpg',
-      productStatus: 0,
-      categoryType: 0,
-      createTime: '2018-03-10T11:44:25.000+0000',
-      updateTime: '2018-03-10T11:44:25.000+0000'
-    },
-    {
-      producId: 'B0002',
-      productName: 'Python',
-      productPrice: 59.00,
-      productStock: 100,
-      productDescription: 'Book for learning Python',
-      productIcon: 'https://images-na.ssl-images-amazon.com/images/I/51tjBN6kkEL._SX374_BO1,204,203,200_.jpg',
-      productStatus: 1,
-      categoryType: 0,
-      createTime: '2018-03-10T11:44:25.000+0000',
-      updateTime: '2018-03-10T11:44:25.000+0000'
-    },
-    {
-      producId: 'B0003',
-      productName: 'Deep Learning',
-      productPrice: 72.00,
-      productStock: 23,
-      productDescription: 'Book for learning DI',
-      productIcon: 'https://images-na.ssl-images-amazon.com/images/I/71IcMdUyGYL.jpg',
-    //  productIcon: 'https://scontent.fhan1-1.fna.fbcdn.net/v/t1.0-9/95581346_1170419383291695_7159944072818327552_n.jpg?_nc_cat=107&ccb=2&_nc_sid=09cbfe&_nc_ohc=7gDIolsEjWUAX9SLUJj&_nc_ht=scontent.fhan1-1.fna&oh=791c7ffff10927a5335a8adc14c0a25d&oe=5FF46937',
-      productStatus: 0,
-      categoryType: 0,
-      createTime: '2018-03-10T11:44:25.000+0000',
-      updateTime: '2018-03-10T11:44:25.000+0000'
-    }
-  ];
+  products: any = [];
 
-  constructor(private productService: ProductService) {
+  constructor(private productService: ProductService, 
+    private router: ActivatedRoute) {
     
   }
 
-  ngOnInit(): void {
+  ngDestroy(): void {
+
   }
 
-}
+  ngOnInit(): void {
+        //component duoc tao
+        this.router.params.subscribe(() => {
+          console.log('ngOnInit');
+          
+          this.update();
+        }); 
+  }
+
+    /*mục đích dùng để nhận diện và xử lý 2 case là get tất cả product (hiện không chưa phân page)
+  và get theo category. 
+   */
+  update() {
+    /* lấy ra đường đường path (this.router.snapshot.url trả về mảng nhé) của route ví dụ
+    http://localhost:4200/product  url[0].path --> product
+    http://localhost:4200/category/0 url[0].path --> category , url[1].path -->0
+    */
+   const path = this.router.snapshot.url[0].path;
+   console.log('path ' + path);
+   
+   if(path === 'product') {
+     this.getProducts(1,3);
+   } else {
+     const type = this.router.snapshot.url[1].path
+     console.log('type ' + type);
+     this.getCategory(+type, 1, 3);
+   }
+  }
+
+
+  getProducts(page: number, size: number) {
+    this.productService.getProduct(page, size)
+     .subscribe(
+       data => {
+         console.log('data ' + JSON.stringify(data));
+         this.products = data?.content;
+       },
+       function(err) {
+         console.log('err ' + err);
+       } 
+     )
+   }
+ 
+   getCategory(type: number, page: number, size: number) {
+     this.productService.getProductCategory(type, page, size).subscribe(
+       data => {
+         console.log('data ' + JSON.stringify(data));
+         
+         this.title = data?.category;
+         this.products = data?.page?.content;
+       },
+       function(err) {
+         console.log('err ' + err);
+       }
+     )
+   }
+ }

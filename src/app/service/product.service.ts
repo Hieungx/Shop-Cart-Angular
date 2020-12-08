@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { url } from 'inspector';
+import { Observable, of } from 'rxjs';
 import { urlApi } from 'src/environments/environment';
+import { ProductInfo } from '../model/ProductInfo';
+import {catchError} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +14,23 @@ export class ProductService {
 
   }
 
-  getProduct(page: number, size: number){
-    const url=`${urlApi}\product?${page}&${size}`
-    this.http.get(url).pipe()
+  getProduct(page: number, size: number) : Observable<any>{
+    const url = `${urlApi}/product?page=${page}&size=${size}`
+    return this.http.get(url).pipe();
+  }
+  getDetail(id: string): Observable<ProductInfo> {
+    const url = `${urlApi}/product/${id}`;
+    return this.http.get<ProductInfo>(url).pipe(
+     catchError(_ => {
+             console.log("Get Detail Failed");
+             return of(new ProductInfo());
+       })
+    )
+  }
+
+   /* api: localhost:8080/api/category/0 */
+   getProductCategory(type: number, page: number, size: number) : Observable<any>{
+    const url = `${urlApi}/category/${type}?page=${page}&size=${size}`
+    return this.http.get(url).pipe();
   }
 }

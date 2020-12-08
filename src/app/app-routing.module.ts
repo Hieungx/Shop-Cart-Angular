@@ -1,13 +1,21 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { DetailComponent } from './components/detail/detail.component';
 import { HomeComponent } from './components/home/home.component';
 
 
-const routes : Routes = [
+const routes: Routes = [
   {
     path: '',
+    redirectTo: '/product', 
+    pathMatch: 'full'
+  },
+  {
+    path: 'product',
+    component: HomeComponent
+  },
+  {
+    path: 'category/:id',
     component: HomeComponent
   },
   {
