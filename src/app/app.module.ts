@@ -10,6 +10,8 @@ import { DetailComponent } from './components/detail/detail.component';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule} from '@angular/common/http';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import { HttpClientModule} from '@angular/common/http';
     HeaderComponent,
     FooterComponent,
     HomeComponent,
-    DetailComponent
+    DetailComponent,
+    RegisterComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

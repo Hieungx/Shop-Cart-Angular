@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { urlApi } from 'src/environments/environment';
-import { ProductInfo } from '../model/ProductInfo';
+import { ProductInfo } from '../model/productInfo';
 import {catchError} from 'rxjs/operators';
 
 @Injectable({
